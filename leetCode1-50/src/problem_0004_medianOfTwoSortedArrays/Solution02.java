@@ -6,32 +6,72 @@ public class Solution02 {
  		nums1.length : m
 		nums2.length : n
 	
-		Time Complexity : 
+		Time Complexity : WorstCase -> O(nlgn),  BestCase -> O(lgn)
 	*/
 	public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
     
+		int len = nums1.length + nums2.length;
 		
-	
-		return 0;
+		if(len%2 == 0) {
+			int n1 = findRankedNum(nums1, nums2, len/2);
+			int n2 = findRankedNum(nums1, nums2, len/2+1);
+			return (n1+n2)/2.0;
+		}
+		
+		return findRankedNum(nums1, nums2, len/2+1);
+	}
+	private static int findRankedNum(int[] nums1, int[] nums2, int rank) {
+		return findRankedNumRecur(nums1, nums2, 0, 0, rank);
 	}
 	
-	private static double findRankedNumRecur(int[] nums1, int[] nums2, int nums1LIndex, int nums1RIndex, int nums2LIndex, int nums2RIndex, int rank) {
-		if(nums1LIndex > nums1RIndex)
+	private static int findRankedNumRecur(int[] nums1, int[] nums2, int nums1LIndex, int nums2LIndex, int rank) {
+		if(nums1LIndex >= nums1.length)
 			return nums2[nums2LIndex + rank - 1];
-		if(nums2LIndex > nums2RIndex)
+		if(nums2LIndex >= nums2.length)
 			return nums1[nums1LIndex + rank - 1];
 		
 		
-		int len1 = nums1RIndex-nums1LIndex+1;
-		int len2 = nums2RIndex-nums2LIndex+1;
+		int len1 = nums1.length-nums1LIndex;
+		int len2 = nums2.length-nums2LIndex;
+		
+		boolean b = len1<=len2;
+		
+		int target = b ? nums1[nums1LIndex] : nums2[nums2LIndex];
+		int resultIndex = b ? binarySearch(nums2, nums2LIndex, nums2.length-1, target) : binarySearch(nums1, nums1LIndex, nums1.length-1, target);
+		
+		int resultRank = b ? getRankFromResultIndex(resultIndex, nums2LIndex) : getRankFromResultIndex(resultIndex, nums1LIndex);
 		
 		
-		return 0;
+		if(resultRank == rank) 
+			return target;
+		if(resultRank > rank)
+			return b ? nums2[nums2LIndex+rank-1] : nums1[nums1LIndex+rank-1];
+		
+		if(b) {
+			nums1LIndex++;
+			nums2LIndex = nums2LIndex+resultRank-1;
+		}else {
+			nums2LIndex++;
+			nums1LIndex = nums1LIndex+resultRank-1;
+		}
+		
+		rank -= resultRank;
+		
+		
+		return findRankedNumRecur(nums1, nums2, nums1LIndex, nums2LIndex, rank);
+	}
+	private static int getRankFromResultIndex(int resultIndex, int lIndex) {
+		if(resultIndex >= 0)
+			return resultIndex-lIndex+2;
+		
+		resultIndex = -resultIndex-1;
+		
+		return resultIndex-lIndex+1;
 	}
 	
-	public static int binarySearch(int[] nums, int lIndex, int rIndex, int target) {
+	private static int binarySearch(int[] nums, int lIndex, int rIndex, int target) {
 		if(lIndex == rIndex)
-			return (target>nums[lIndex]) ? -2 : ((target<nums[lIndex]) ? -1 : 0);
+			return (target>nums[lIndex]) ? -lIndex-2 : ((target<nums[lIndex]) ? -lIndex-1 : lIndex);
 		
 		
 		while(lIndex <= rIndex) {
@@ -46,6 +86,6 @@ public class Solution02 {
 				return middleIndex;
 		}
 		
-		return -(lIndex+1);
+		return -lIndex-1;
 	}
 }
