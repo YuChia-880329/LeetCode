@@ -55,13 +55,23 @@ public class Main {
 	public static void main(String[] args) {
 		
 		String s01 = "42";
-		String s02 = "-42";
+		String s02 = "   -42";
 		String s03 = "4193 with words";
+		String s04 = "";
+		String s05 = "2147483652";
+		String s06 = "-21474836482";
+		String s07 = "pa";
+		String s08 = "-";
 		
 		
 		System.out.println("01 : " + Solution01.myAtoi(s01));
 		System.out.println("02 : " + Solution01.myAtoi(s02));
 		System.out.println("03 : " + Solution01.myAtoi(s03));
+		System.out.println("04 : " + Solution01.myAtoi(s04));
+		System.out.println("05 : " + Solution01.myAtoi(s05));
+		System.out.println("06 : " + Solution01.myAtoi(s06));
+		System.out.println("07 : " + Solution01.myAtoi(s07));
+		System.out.println("08 : " + Solution01.myAtoi(s08));
 	}
 
 }

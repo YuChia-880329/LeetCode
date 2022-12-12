@@ -3,8 +3,9 @@ package problem_0008_stringToInteger_atoi;
 public class Solution01 {
 
 	/*
+		s.length() : n
 		
-	
+		Time Complexity : O(n)
 	*/
 	public static int myAtoi(String s) {
 	
@@ -17,22 +18,29 @@ public class Solution01 {
 		char ch = ' ';
 		
 		int index = 0;
-		while((ch = s.charAt(index++)) == ' ') {
+		while((index<len) && ((ch=s.charAt(index++))==' ')) {
 		}
 		
 		boolean isPositive = true;
-		if(ch == '+') {
-		}else if(ch == '-') {
+		if(ch == '-') 
 			isPositive = false;
-			ch = s.charAt(index++);
-		}else {
+		else if(ch!='+' && !isNumberDigit(ch))
 			return 0;
-		}
+	
 		
-		int digit = 0;
 		int number = 0;
-		while(isNumberDigit(ch=s.charAt(index++))) {
-			number += ((ch-'0')* (int)Math.pow(10, digit++));
+		if(isNumberDigit(ch)) 
+			number += (ch-'0');
+		while((index<len) && isNumberDigit(ch=s.charAt(index++))) {
+			
+			if(number >= 214748365)
+				return isPositive ? 2147483647 : -2147483648;
+			
+			byte n = (byte)(ch-'0');
+			if(number==214748364 && n>=8)
+				return isPositive ? 2147483647 : -2147483648;
+			number *= 10;
+			number += n;
 		}
 		
 		number = isPositive ? number : -number;
